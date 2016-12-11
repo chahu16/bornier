@@ -1,5 +1,60 @@
 "use strict";
 
+// DOM manipulation functions
+// add attributes to html tag
+const addAttribute = (el, attr) => {
+	if (typeof el === "string") {
+		el = document.querySelector(el);
+	}
+	if (!(el instanceof Element)) { return; }
+	Object.keys(attr).forEach((key) => {
+		el.attributes[key] = attr[key];
+	});
+};
+
+// add content to html tag
+const addContent = (el, content) => {
+	if (typeof el === "string") {
+		el = document.querySelector(el);
+	}
+	if (!(el instanceof Element)) { return; }
+	if (typeof content === "string") {
+		el.appendChild(document.createTextNode(content));
+	} else if (Array.isArray(content)) {
+		content.forEach((subContent) => {
+			addContent(el, subContent);
+		});
+	} else if (content instanceof Element) {
+		el.appendChild(content);
+	}
+};
+
+// create new tag
+const newEl = (tag, attrs, content) => {
+	var el = document.createElement(tag);
+	Object.keys(attrs).forEach((key) => {
+		el.setAttribute(key, attrs[key]);
+	});
+	addContent(el, content);
+	return el;
+};
+
+// delete tag
+const delEl = (el) => {
+	if (typeof el === "string") {
+		el = document.querySelector(el);
+	}
+	if (el instanceof Element) {
+		while (el.firstChild) {
+			if (el.firstChild instanceof Element) {
+				delEl(el.firstChild);
+			}
+			el.removeChild(el.firstChild);
+		}
+	}
+};
+// end DOM manipulation functions
+
 const cablesType = [
 	"Rigide",
 	"Souple",
@@ -138,58 +193,4 @@ const updateBornier = () => {
 const generateBorneArrayFromBorniers = () => {
 	// TODO you need to go through the bornier array to generate an array of the
 	// needed borne
-};
-
-// generic function
-// add attributes to html tag
-const addAttribute = (el, attr) => {
-	if (typeof el === "string") {
-		el = document.querySelector(el);
-	}
-	if (!(el instanceof Element)) { return; }
-	Object.keys(attr).forEach((key) => {
-		el.attributes[key] = attr[key];
-	});
-};
-
-// add content to html tag
-const addContent = (el, content) => {
-	if (typeof el === "string") {
-		el = document.querySelector(el);
-	}
-	if (!(el instanceof Element)) { return; }
-	if (typeof content === "string") {
-		el.appendChild(document.createTextNode(content));
-	} else if (Array.isArray(content)) {
-		content.forEach((subContent) => {
-			addContent(el, subContent);
-		});
-	} else if (content instanceof Element) {
-		el.appendChild(content);
-	}
-};
-
-// create new tag
-const newEl = (tag, attrs, content) => {
-	var el = document.createElement(tag);
-	Object.keys(attrs).forEach((key) => {
-		el.setAttribute(key, attrs[key]);
-	});
-	addContent(el, content);
-	return el;
-};
-
-// delete tag
-const delEl = (el) => {
-	if (typeof el === "string") {
-		el = document.querySelector(el);
-	}
-	if (el instanceof Element) {
-		while (el.firstChild) {
-			if (el.firstChild instanceof Element) {
-				delEl(el.firstChild);
-			}
-			el.removeChild(el.firstChild);
-		}
-	}
 };
