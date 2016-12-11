@@ -1,0 +1,15 @@
+{
+	// environment
+	"browser": true,
+	"devel": true,
+
+	"globals": [
+		"console"
+	],
+
+	"esversion": 6,
+	"strict": "global",
+	"undef": true,
+	"unused": true,
+	"curly": true
+}
