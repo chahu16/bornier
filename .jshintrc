@@ -11,6 +11,5 @@
 	"esversion": 6,
 	"strict": "global",
 	"undef": true,
-	"unused": true,
 	"curly": true
 }

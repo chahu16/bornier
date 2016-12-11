@@ -15,16 +15,43 @@ const cables = [
 	{ "label": "LY-CY 4X0.75", "conducteurActif": 4, "terre": false, type: "Blinde" },
 ];
 
-var bornier = [];
+// all the borniers
+var borniers = [];
 
-const removeCable = (e) => {
+/**
+ * function called when clicking on the remove button on the cable row
+ *
+ * @param DOMElement e      Cable remove button
+ * @param Object bornier    bornier object from borniers array
+ * @param Object cable      cable oject fromt the cable array of the bornier
+ */
+const removeCable = (e, bornier, cable) => {
 	const line = e.parentNode.parentNode;
 	delEl(line);
 	line.parentNode.removeChild(line);
+	// TODO remove cable from bornier
+	// /!\ if you remove cable from array all indexes will be shifted, you should
+	// set the cable in the array to null instead
 };
 
-const addCable = (e) => {
-	const div = e.parentNode;
+/**
+ * function called when changing cable quantity
+ *
+ * @param DOMElement e      Cable quanity input
+ * @param Object cable      Cable who's quantity has changed
+ */
+const changeCableQuantity = (e, cable) => {
+	// TODO update quantity of cable
+};
+
+/**
+ * function called when clicking addCable
+ *
+ * @param DOMElement e      Add cable button
+ * @param Object bornier    Bornier who got one more cable
+ */
+const addCable = (e, bornier) => {
+	const id = bornier.cables.length;
 	const body = e.nextSibling.childNodes[1];
 	addContent(body,
 		newEl("tr", {}, [
@@ -34,37 +61,32 @@ const addCable = (e) => {
 				}))
 			),
 			newEl("td", {},
-				newEl("input", { "type": "number", "min": 1, "onchange": "changeCableQuantity(this)" })
+				newEl("input", { "type": "number", "min": 1,
+					"onchange": `changeCableQuantity(this, borniers[${bornier.id}].cable[${id}])` })
 			),
 			newEl("td", {},
-				newEl("button", { "onclick": "removeCable(this)" }, "Remove")
+				newEl("button", { "onclick": `removeCable(this, borniers[${bornier.id}], borniers[${bornier.id}].cables[${id}])` }, "Remove")
 			)
 		])
 	);
 
-	console.log(body);
-	console.log(div);
-	const parent = bornier.reduce((prev, cur) => {
-		if (cur.name === div.id) {
-			return cur;
-		}
-		return prev;
-	}, null);
-	if (parent) {
-		parent.cables.push({
-			"id": body.childNodes[0].childNodes.length,
-			"name": `cable${body.childNodes[0].childNodes.length}`,
-			"cable": cables[0],
-			"quantite": 0
-		});
-	}
+	bornier.cables.push({
+		"id": id,
+		"name": `cable${id}`,
+		"cable": cables[0],
+		"quantite": 0
+	});
 };
 
-const generateBornier = (id) => {
+/**
+ * generate a new bornier
+ */
+const generateBornier = () => {
+	const id = borniers.length;
 	addContent("#borniers",
 		newEl("div", { "id": `bornier${id}` }, [
 			newEl("span", {}, `Bornier ${id}`),
-			newEl("button", { "onclick": "addCable(this)" }, "Add Cable"),
+			newEl("button", { "onclick": `addCable(this, borniers[${id}])` }, "Add Cable"),
 			newEl("table", {}, [
 				newEl("thead", {},
 					newEl("tr", {}, [
@@ -73,7 +95,7 @@ const generateBornier = (id) => {
 						newEl("th", {}, "Enlever")
 					])
 				),
-				newEl("tbody", { "id": `bornier${id}Body`})
+				newEl("tbody", {})
 			])
 		]
 	));
@@ -86,16 +108,37 @@ const generateBornier = (id) => {
 	};
 };
 
+/**
+ * remove the last bornier
+ */
+const removeLastBornier = () => {
+	// TODO remove last last bornier from the DOM and the borniers array
+};
+
+/**
+ * function call when changing the number of bornier
+ */
 const updateBornier = () => {
 	const ctrl = document.querySelector("#nbBornier");
 	const nbBornier = parseInt(ctrl.value);
-	if (bornier.length < nbBornier) {
-		while (bornier.length < nbBornier) {
-			bornier.push(generateBornier(bornier.length));
+	if (borniers.length < nbBornier) {
+		while (borniers.length < nbBornier) {
+			borniers.push(generateBornier());
+		}
+	} else if (borniers.length > nbBornier) {
+		while (borniers.length > nbBornier) {
+			removeLastBornier();
 		}
 	}
 };
 
+/**
+ * generate array of borne from the borniers array
+ */
+const generateBorneArrayFromBorniers = () => {
+	// TODO you need to go through the bornier array to generate an array of the
+	// needed borne
+};
 
 // generic function
 // add attributes to html tag
