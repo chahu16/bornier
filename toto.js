@@ -3,3 +3,5 @@
 const toto = () => {
 	return "caca";
 };
+
+console.log(toto());
